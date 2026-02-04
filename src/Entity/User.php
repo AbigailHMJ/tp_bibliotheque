@@ -3,73 +3,42 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password_hash = null;
+    
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    // /**
+    //  * @var list<string> The user roles
+    //  */
+    // #[ORM\Column]
+    // private array $roles = [];
 
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?string $password = null;
 
-    /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'user')]
-    private Collection $reservations;
-
-    /**
-     * @var Collection<int, Book>
-     */
-    #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'users')]
-    private Collection $books;
-
-    public function __construct()
-    {
-        $this->reservations = new ArrayCollection();
-        $this->books = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -84,92 +53,72 @@ class User
         return $this;
     }
 
-    public function getPasswordHash(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->password_hash;
+        return (string) $this->email;
     }
 
-    public function setPasswordHash(string $password_hash): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->password_hash = $password_hash;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
 
-        return $this;
+        return array_unique($roles);
     }
 
-    public function getRole(): ?string
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
     {
-        return $this->role;
-    }
-
-    public function setRole(string $role): static
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Reservation>
+     * @see PasswordAuthenticatedUserInterface
      */
-    public function getReservations(): Collection
+    public function getPassword(): ?string
     {
-        return $this->reservations;
+        return $this->password;
     }
 
-    public function addReservation(Reservation $reservation): static
+    public function setPassword(string $password): static
     {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
-            if ($reservation->getUser() === $this) {
-                $reservation->setUser(null);
-            }
-        }
+        $this->password = $password;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Book>
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
      */
-    public function getBooks(): Collection
+    public function __serialize(): array
     {
-        return $this->books;
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
     }
 
-    public function addBook(Book $book): static
+    public function getName(): ?string
     {
-        if (!$this->books->contains($book)) {
-            $this->books->add($book);
-        }
-
-        return $this;
+        return $this->name;
     }
 
-    public function removeBook(Book $book): static
+    public function setName(string $name): static
     {
-        $this->books->removeElement($book);
+        $this->name = $name;
 
         return $this;
     }
