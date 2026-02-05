@@ -23,20 +23,7 @@ class ReservationType extends AbstractType
                     'placeholder' => 'votre nom',
                 ]
             ])
-            ->add('email', TextType::class, [
-                'label' => 'Email : ',
-                'attr' => [
-                    'placeholder' => 'votre mail',
-                ]
-            ])
-            ->add('books', EntityType::class, [
-            'class' => Book::class,
-            'choice_label' => 'title',
-            'multiple' => true,
-            'expanded' => true,
-            'label' => 'Livres : ',
-            'required' => false
-        ]);
+            ->add('created_at')
         ;
     }
 
