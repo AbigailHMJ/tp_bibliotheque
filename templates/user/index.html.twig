@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}Gestion{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
+    <h1>Gestion des utilisateurs</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th>Nom</th>
                 <th>Email</th>
                 {# <th>Password_hash</th> #}
                 {# <th>Role</th>
@@ -27,8 +27,8 @@
                 {# <td>{{ user.role }}</td> #}
                 {# <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td> #}
                 <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">Voir l'utlisateur</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">Modifier l'utilisateur</a>
                 </td>
             </tr>
         {% else %}
@@ -39,5 +39,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_user_new') }}">Create new</a>
+    <a href="{{ path('app_user_new') }}">Créer un nouvel utilisateur</a>
 {% endblock %}

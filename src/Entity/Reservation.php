@@ -22,8 +22,9 @@ class Reservation
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+    
 
-     public function getName(): ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
