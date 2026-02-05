@@ -31,6 +31,9 @@ final class ReservationController extends AbstractController
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
+        $reservation->setUser($this->getUser()); 
+        $reservation->setCreatedAt(new \DateTimeImmutable());
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($reservation);
             $entityManager->flush();
