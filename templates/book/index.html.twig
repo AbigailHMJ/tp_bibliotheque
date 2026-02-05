@@ -4,7 +4,13 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Livres</h1>
+
+	<h1 class="nav-link">Bonjour
+		{{ app.user.getName() }}
+		,</h1>
+
+	<h1>Livres
+	</h1>
 
 	<table class="table">
 		<thead>
@@ -17,9 +23,9 @@
 				<th>Auteur</th>
 				<th>Catégorie</th>
 				<th>Description</th>
-                {% if is_granted('ROLE_ADMIN') %}
-				<th>Actions</th>
-                {% endif %}
+				{% if is_granted('ROLE_ADMIN') %}
+					<th>Actions</th>
+				{% endif %}
 			</tr>
 		</thead>
 		<tbody>
@@ -41,6 +47,9 @@
 							<a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
 						{% endif %}
 
+						<a href="{{ path('app_reservation_new') }}" class="btn btn-primary">
+							Réserver maintenant
+						</a>
 					</td>
 				</tr>
 			{% else %}
