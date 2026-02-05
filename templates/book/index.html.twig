@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book index
+{% block title %}Index des livres
 {% endblock %}
 
 {% block body %}
@@ -13,12 +13,12 @@
 					<th>Id</th>
 				{% endif %}
 				<th>Stock</th>
-				<th>Title</th>
-				<th>Author</th>
-				<th>Category</th>
+				<th>Titre</th>
+				<th>Auteur</th>
+				<th>Catégorie</th>
 				<th>Description</th>
                 {% if is_granted('ROLE_ADMIN') %}
-				<th>actions</th>
+				<th>Actions</th>
                 {% endif %}
 			</tr>
 		</thead>
@@ -45,7 +45,7 @@
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="7">no records found</td>
+					<td colspan="7">Aucun livre trouvé</td>
 				</tr>
 			{% endfor %}
 		</tbody>

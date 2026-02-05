@@ -11,18 +11,23 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('email')
+            ->add('name', TextType::class, [
+                'label' => 'Nom : ',
+            ])
+            ->add('email', TextType::class, [
+                'label' => 'Email : ',
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
-                    new IsTrue(message: 'You should agree to our terms.'),
+                    new IsTrue(message: 'Vous devez accepter les conditions d\'utilisation.'),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
@@ -31,8 +36,8 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
-                    new NotBlank(message: 'Please enter a password'),
-                    new Length(min: 6, minMessage:'Your password should be at least {{ limit }} characters',max: 4096),
+                    new NotBlank(message: 'Veuillez entrer un mot de passe.'),
+                    new Length(min: 6, minMessage:'Votre mot de passe doit contenir au moins {{ limit }} caractères',max: 4096),
                 ],
             ])
         ;
