@@ -70,4 +70,40 @@ class Reservation
 
         return $this;
     }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getBooks(): ?string
+    {
+        return $this->books;
+    }
+
+    public function setBooks(string $books): static
+    {
+        $this->books = $books;
+
+        return $this;
+    }
 }
