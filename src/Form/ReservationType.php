@@ -2,9 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Reservation;
 use App\Entity\Book;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,12 +18,25 @@ class ReservationType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom :',
+                'label' => 'Nom : ',
                 'attr' => [
                     'placeholder' => 'votre nom',
                 ]
             ])
-            
+            ->add('email', TextType::class, [
+                'label' => 'Email : ',
+                'attr' => [
+                    'placeholder' => 'votre mail',
+                ]
+            ])
+            ->add('books', EntityType::class, [
+            'class' => Book::class,
+            'choice_label' => 'title',
+            'multiple' => true,
+            'expanded' => true,
+            'label' => 'Livres : ',
+            'required' => false
+        ]);
         ;
     }
 
