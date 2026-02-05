@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reservation index{% endblock %}
+{% block title %}Liste des réservations{% endblock %}
 
 {% block body %}
-    <h1>Reservation index</h1>
+    <h1>Liste des réservations</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Created_at</th>
+                {# <th>Id</th> #}
+                <th>Date</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -19,17 +19,17 @@
                 <td>{{ reservation.id }}</td>
                 <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">show</a>
-                    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">edit</a>
+                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">voir</a>
+                    <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}">modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Vous n'avez pas encore de réservation</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_reservation_new') }}">Create new</a>
+    <a href="{{ path('app_reservation_new') }}">Nouvelle réservation</a>
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
+use App\Entity\User;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
