@@ -1,43 +1,60 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Book index{% endblock %}
+{% block title %}Index des livres
+{% endblock %}
 
 {% block body %}
-    <h1>Book index</h1>
+	<h1>Livres</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Stock</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
-            <tr>
-                <td>{{ book.id }}</td>
-                <td>{{ book.stock }}</td>
-                <td>{{ book.title }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.category }}</td>
-                <td>{{ book.description }}</td>
-                <td>
-                    <a href="{{ path('app_book_show', {'id': book.id}) }}">show</a>
-                    <a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				{% if is_granted('ROLE_ADMIN') %}
+					<th>Id</th>
+				{% endif %}
+				<th>Stock</th>
+				<th>Titre</th>
+				<th>Auteur</th>
+				<th>Catégorie</th>
+				<th>Description</th>
+                {% if is_granted('ROLE_ADMIN') %}
+				<th>Actions</th>
+                {% endif %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for book in books %}
+				<tr>
+					{% if is_granted('ROLE_ADMIN') %}
+						<td>{{ book.id }}</td>
+					{% endif %}
+					<td>{{ book.stock }}</td>
+					<td>{{ book.title }}</td>
+					<td>{{ book.author }}</td>
+					<td>{{ book.category }}</td>
+					<td>{{ book.description }}</td>
+					<td>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{ path('app_book_show', {'id': book.id}) }}">show</a>
+						{% endif %}
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{ path('app_book_edit', {'id': book.id}) }}">edit</a>
+						{% endif %}
 
-    <a href="{{ path('app_book_new') }}">Créer un nouveau livre</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="7">Aucun livre trouvé</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="{{ path('app_book_new') }}" class="btn btn-primary">
+			Créer un nouveau livre
+		</a>
+	{% endif %}
+
 {% endblock %}
