@@ -22,6 +22,10 @@ class Reservation
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+    #[ORM\Column(length:255)]
+    private ?string $email = null;
+    #[ORM\Column(length:255)]
+    private ?string $books = null;
     
 
     public function getName(): ?string
