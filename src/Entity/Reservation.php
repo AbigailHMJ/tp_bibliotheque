@@ -47,6 +47,10 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $books = null;
 
+    #[ORM\ManyToOne(targetEntity: Book::class,inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Book $book = null;
+
 
     public function getName(): ?string
     {
@@ -106,6 +110,18 @@ class Reservation
 
         return $this;
     }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
+        return $this;
+    }
+
 
     public function getBooks(): ?string
     {

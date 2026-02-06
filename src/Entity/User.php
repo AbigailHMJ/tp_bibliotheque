@@ -66,35 +66,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'user_book')]
     private Collection $books;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservation::class)]
+    private Collection $reservations;
+
     public function __construct()
-{
-    $this->books = new ArrayCollection();
-}
-
-/**
- * @return Collection<int, Book>
- */
-public function getBooks(): Collection
-{
-    return $this->books;
-}
-
-public function addBook(Book $book): static
-{
-    if (!$this->books->contains($book)) {
-        $this->books->add($book);
-        $book->addUser($this);
+    {
+        $this->books = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
     }
-    return $this;
-}
 
-public function removeBook(Book $book): static
-{
-    if ($this->books->removeElement($book)) {
-        $book->removeUser($this);
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
     }
-    return $this;
-}
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->addUser($this);
+        }
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            $book->removeUser($this);
+        }
+        return $this;
+    }
 
     public function getId(): ?int
     {
