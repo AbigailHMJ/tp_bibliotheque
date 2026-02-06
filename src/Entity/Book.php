@@ -34,13 +34,21 @@ class Book
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'books')]
-    private Collection $users;
+    #[ORM\ManyToMany(targetEntity: Book::class)]
+private Collection $books;
 
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'books')]
+    private Collection $reservations;
+
+public function __construct()
+{
+    $this->books = new ArrayCollection();
+    $this->reservations = new ArrayCollection();
+}
+
 
     public function getId(): ?int
     {
@@ -126,7 +134,7 @@ class Book
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->addBook($this);
+            // $user->addBook($this);
         }
 
         return $this;
@@ -135,7 +143,34 @@ class Book
     public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
-            $user->removeBook($this);
+            // $user->removeBook($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->addBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            $reservation->removeBook($this);
         }
 
         return $this;

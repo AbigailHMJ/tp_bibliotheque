@@ -35,7 +35,7 @@ class ReservationType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'label' => 'Livres : ',
-            'required' => false
+            'required' => false,
         ]);
         ;
     }

@@ -48,10 +48,11 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_reservation_show', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_USER')]
     public function show(Reservation $reservation): Response
     {
+        
         return $this->render('reservation/show.html.twig', [
             'reservation' => $reservation,
         ]);
@@ -76,7 +77,7 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    // #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
     {
@@ -87,4 +88,5 @@ final class ReservationController extends AbstractController
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }
