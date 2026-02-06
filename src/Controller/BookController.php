@@ -77,7 +77,7 @@ final class BookController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->request->get('_token'))) {
             $entityManager->remove($book);
             $entityManager->flush();
         }

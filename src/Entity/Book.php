@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -17,18 +19,43 @@ class Book
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\PositiveOrZero(message: "Le stock ne peut pas être négatif.")]
     private ?int $stock = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "Le titre du livre doit contenir au moins 2 caractères.",
+        maxMessage: "Le titre du livre ne doit pas dépasser 50 caractères."
+    )]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "Le nom de l'auteur doit contenir au moins 2 caractères.",
+        maxMessage: "Le nom de l'auteur ne doit pas dépasser 50 caractères."
+    )]
     private ?string $author = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "La categorie doit contenir au moins 2 caractères.",
+        maxMessage: "La categorie ne doit pas dépasser 50 caractères."
+    )]
     private ?string $category = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "La description doit contenir au moins 2 caractères.",
+        maxMessage: "La description ne doit pas dépasser 50 caractères."
+    )]
     private ?string $description = null;
 
     /**
@@ -47,12 +74,7 @@ class Book
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+    
 
     public function getStock(): ?int
     {

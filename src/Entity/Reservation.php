@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -21,12 +23,30 @@ class Reservation
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+    min: 2,
+    max: 50,
+    minMessage: "Le nom doit contenir au moins 2 caractères.",
+    maxMessage: "Le nom ne doit pas dépasser 50 caractères."
+)]
+    #[Assert\Regex(
+        pattern: "/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,50}$/",
+        message: "Le nom ne doit contenir que des lettres, espaces, tirets ou apostrophes."
+    )]
     private ?string $name = null;
-    #[ORM\Column(length:255)]
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: "/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/",
+        message: "Veuillez entrer une adresse e-mail valide."
+    )]
     private ?string $email = null;
-    #[ORM\Column(length:255)]
+
+    #[ORM\Column(length: 255)]
     private ?string $books = null;
-    
+
 
     public function getName(): ?string
     {

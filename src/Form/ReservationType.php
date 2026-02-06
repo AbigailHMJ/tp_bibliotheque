@@ -9,6 +9,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Count;
+
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -30,14 +32,19 @@ class ReservationType extends AbstractType
                 ]
             ])
             ->add('books', EntityType::class, [
-            'class' => Book::class,
-            'choice_label' => 'title',
-            'multiple' => true,
-            'expanded' => true,
-            'label' => 'Livres : ',
-            'required' => false
-        ]);
-        ;
+                'class' => Book::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Livres : ',
+                'required' => false,
+                'constraints' => [
+                    new Count(
+                        min : 1,
+                        minMessage : 'Veuillez sélectionner au moins un livre.',
+                    ),
+                ],
+            ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
