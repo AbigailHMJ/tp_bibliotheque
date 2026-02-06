@@ -32,8 +32,10 @@ class ReservationType extends AbstractType
             ->add('books', EntityType::class, [
             'class' => Book::class,
             'choice_label' => 'title',
+            'multiple' => true,
+            'expanded' => true,
             'label' => 'Livres : ',
-            'placeholder' => 'Livres : '
+            'required' => false
         ]);
         ;
     }
