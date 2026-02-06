@@ -49,6 +49,14 @@ class ReservationType extends AbstractType
                     ),
                 ],
             ]);;
+            'class' => Book::class,
+            'choice_label' => 'title',
+            'multiple' => true,
+            'expanded' => true,
+            'label' => 'Livres : ',
+            'required' => false,
+        ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

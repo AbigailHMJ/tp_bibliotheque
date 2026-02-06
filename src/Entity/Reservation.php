@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ReservationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -50,6 +52,23 @@ class Reservation
     #[ORM\ManyToOne(targetEntity: Book::class,inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Book $book = null;
+
+    private ?string $email = null;
+
+    #[ORM\ManyToMany(targetEntity: Book::class)]
+    private Collection $books;
+
+    /**
+     * @var Collection<int, Book>
+     */
+    
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
+
+
 
 
     public function getName(): ?string
@@ -124,13 +143,24 @@ class Reservation
 
 
     public function getBooks(): ?string
+    public function getBooks(): Collection
     {
-        return $this->books;
+        return $this->books; // retourne bien une Collection
     }
 
-    public function setBooks(string $books): static
+
+    public function addBook(Book $book): static
     {
-        $this->books = $books;
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        $this->books->removeElement($book);
 
         return $this;
     }
