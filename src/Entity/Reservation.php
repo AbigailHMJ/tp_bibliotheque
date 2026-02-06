@@ -6,6 +6,8 @@ use App\Repository\ReservationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -23,9 +25,34 @@ class Reservation
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+    min: 2,
+    max: 50,
+    minMessage: "Le nom doit contenir au moins 2 caractères.",
+    maxMessage: "Le nom ne doit pas dépasser 50 caractères."
+)]
+    #[Assert\Regex(
+        pattern: "/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,50}$/",
+        message: "Le nom ne doit contenir que des lettres, espaces, tirets ou apostrophes."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(
+        pattern: "/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/",
+        message: "Veuillez entrer une adresse e-mail valide."
+    )]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $books = null;
+
+    #[ORM\ManyToOne(targetEntity: Book::class,inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Book $book = null;
+
     private ?string $email = null;
 
     #[ORM\ManyToMany(targetEntity: Book::class)]
@@ -103,6 +130,19 @@ class Reservation
         return $this;
     }
 
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
+        return $this;
+    }
+
+
+    public function getBooks(): ?string
     public function getBooks(): Collection
     {
         return $this->books; // retourne bien une Collection

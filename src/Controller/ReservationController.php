@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reservation;
-use App\Entity\User;
+use App\Repository\BookRepository;
 use App\Form\ReservationType;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,18 +25,31 @@ final class ReservationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reservation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, BookRepository $bookRepository): Response
     {
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
 
-        $reservation->setUser($this->getUser()); 
-        $reservation->setCreatedAt(new \DateTimeImmutable());
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $bookTitleOrId = $reservation->getBooks();
+            $book = $bookRepository->findOneBy(['title' => $bookTitleOrId]);
+
+            if (!$book || $book->getStock() <= 0) {
+                $this->addFlash('error', 'Ce livre n\'est plus disponible en stock.');
+                return $this->redirectToRoute('app_book_index');
+            }
+
+            if ($book) {
+                $book->setStock(($book->getStock()?? 0) - 1);
+                $entityManager->persist($book);
+            }
+
+            $reservation->setUser($this->getUser());
+            $reservation->setCreatedAt(new \DateTimeImmutable());
             $entityManager->persist($reservation);
             $entityManager->flush();
+
 
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -79,14 +92,24 @@ final class ReservationController extends AbstractController
     #[Route('/{id}', name: 'app_reservation_delete', methods: ['POST'])]
     // #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_USER')]
-    public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Reservation $reservation, EntityManagerInterface $entityManager, BookRepository $bookRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->getPayload()->getString('_token'))) {
+
+            $bookTitleOrId = $reservation->getBooks();
+            $book = $bookRepository->findOneBy(['title' => $bookTitleOrId]);
+
+            if ($book) {
+                $book->setStock(($book->getStock() ?? 0) + 1);
+                $entityManager->persist($book);
+            }
+
             $entityManager->remove($reservation);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
     }
+}
     
 }
