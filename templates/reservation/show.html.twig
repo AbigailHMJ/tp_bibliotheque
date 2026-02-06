@@ -17,12 +17,20 @@
 					<tr>
 						<th>Livres</th>
 						<td>
-							{% for book in reservation.books %}
-								{{ book.title }}
+							{% if reservation.book is defined %}
+								{{ reservation.book.title }}
+							{% elseif reservation.books is defined %}
+								{% for book in reservation.books %}
+									{{ book.title }}
+									{% if not loop.last %},
+									{% endif %}
+								{% endfor %}
 							{% else %}
 								Aucun livre
-							{% endfor %}
+							{% endif %}
 						</td>
+
+
 					</tr>
 				</table>
 			</tr>

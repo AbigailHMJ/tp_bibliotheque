@@ -25,22 +25,24 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length:255)]
+    #[ORM\Column(length: 255)]
     private ?string $email = null;
+
+    #[ORM\ManyToMany(targetEntity: Book::class)]
+    private Collection $books;
 
     /**
      * @var Collection<int, Book>
      */
-    #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'reservations')]
-    private Collection $books;
+    
 
     public function __construct()
     {
         $this->books = new ArrayCollection();
     }
 
-    
-    
+
+
 
     public function getName(): ?string
     {
@@ -101,13 +103,11 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Book>
-     */
     public function getBooks(): Collection
     {
-        return $this->books;
+        return $this->books; // retourne bien une Collection
     }
+
 
     public function addBook(Book $book): static
     {
@@ -124,7 +124,4 @@ class Reservation
 
         return $this;
     }
-
-   
-    
 }

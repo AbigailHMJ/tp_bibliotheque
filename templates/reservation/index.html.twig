@@ -19,7 +19,18 @@
 			{% for reservation in reservations %}
 				<tr>
 					<td>{{ reservation.id }}</td>
-					<td></td>
+					 <td>
+                    {# Gestion universelle : un ou plusieurs livres #}
+                    {% if reservation.book is defined and reservation.book is not null %}
+                        {{ reservation.book.title }}
+                    {% elseif reservation.books is defined and reservation.books|length > 0 %}
+                        {% for book in reservation.books %}
+                            {{ book.title }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        Aucun livre
+                    {% endif %}
+                </td>
 					<td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
 					<td>
 						<a href="{{ path('app_reservation_show', {'id': reservation.id}) }}">modifier</a>
